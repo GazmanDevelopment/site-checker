@@ -98,6 +98,10 @@ def test_sites():
             site_name       = website['site']
             last_check_status = website['last_check']
 
+            # Clear any previous values
+            site_content = ''
+            site_response = ''
+
             # Try to connect to the site and read the response into a string object            
             site_response = urllib.request.urlopen(url_to_check)
             site_content = site_response.read().decode(site_response.headers.get_content_charset())
