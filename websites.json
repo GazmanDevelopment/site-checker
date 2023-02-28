@@ -1,0 +1,26 @@
+[
+    {
+        "site": "Procura Mobile - MHC",
+        "url": "https://m.myhomecare.com.au",
+        "search_string": "Procura Web Services (PWS) 10 is running",
+        "last_check": true
+    },
+    {
+        "site": "Procura Mobile - OHC",
+        "url": "https://o.myhomecare.com.au",
+        "search_string": "Procura Web Services (PWS) 10 is running",
+        "last_check": true
+    },
+    {
+        "site": "App Portal",
+        "url": "https://portal.myhomecare.com.au",
+        "search_string": "This is the ",
+        "last_check": true
+    },
+    {
+        "site": "Fake Test Site",
+        "url": "https://fakeurl.myhomecare.com.au",
+        "search_string": "Procura Web Services (PWS) 10 is running",
+        "last_check": false
+    }
+]
