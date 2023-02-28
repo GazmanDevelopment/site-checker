@@ -18,11 +18,12 @@ api_user = ''
 api_pass = ''
 api_from = ''
 sms_to = ''
+test_env = ''
 
 def init():
     # Clear the terminal window during debugging, just makes life easier
     os.system('cls' if os.name == 'nt' else 'clear')
-    global site_file, site_list, api_url, api_pass, api_user, api_from, sms_to, log
+    global site_file, site_list, api_url, api_pass, api_user, api_from, sms_to, log, test_env
 
     # Load the config file
     config = ConfigParser()
@@ -38,6 +39,7 @@ def init():
     api_pass    = config.get('SMS', 'api_pass')
     api_from    = config.get('SMS', 'api_from')
     sms_to      = config.get('SMS', 'sms_to')
+    test_env    = config.get('ENVIRONMENT', 'test_environment')
 
     # Load local variables from config
     log_file    = config.get('ENVIRONMENT', 'log_file')
@@ -135,27 +137,31 @@ def test_sites():
             website['last_check'] = False
 
 def send_message(site, status, old_status):
-    # This script is designed to work with the API from SMS Broadcast.  You will need to adjust the URL for whatever service you use
-    # Note that SMS Broadcast is a paid service and you will need an account.
-    # Follow instructions here to setup the API: https://support.smsbroadcast.com.au/hc/en-us/articles/4413677982607-How-to-Create-New-API-Credentials
     log.info('---- Sending Status Change Notification: ' + site + ' ----')
-    # Determine the status change (up to down, down to up)
-    current_status = 'up' if status else 'down'
-    prior_status = 'up' if old_status else 'down'
-    log.info('Status change to: ' + current_status)
+    if test_env == False:
+        # This script is designed to work with the API from SMS Broadcast.  You will need to adjust the URL for whatever service you use
+        # Note that SMS Broadcast is a paid service and you will need an account.
+        # Follow instructions here to setup the API: https://support.smsbroadcast.com.au/hc/en-us/articles/4413677982607-How-to-Create-New-API-Credentials
+        
+        # Determine the status change (up to down, down to up)
+        current_status = 'up' if status else 'down'
+        prior_status = 'up' if old_status else 'down'
+        log.info('Status change to: ' + current_status)
 
-    # Build the message.  Keep it simple, stupid!
-    message = "Service Status Change: " + site + ".  Status changed from " + prior_status + " to " + current_status + "."
-    log.info('Message built: ' + message)
+        # Build the message.  Keep it simple, stupid!
+        message = "Service Status Change: " + site + ".  Status changed from " + prior_status + " to " + current_status + "."
+        log.info('Message built: ' + message)
 
-    # Build the request URL and encode it
-    api_request = requote_uri(api_url + "?username=" + api_user + "&password=" + api_pass + "&from=" + api_from +  "&to=" + sms_to + "&message=" + message)
-    log.info('API Request built and encoded')
+        # Build the request URL and encode it
+        api_request = requote_uri(api_url + "?username=" + api_user + "&password=" + api_pass + "&from=" + api_from +  "&to=" + sms_to + "&message=" + message)
+        log.info('API Request built and encoded')
 
-    # Actually send the request
-    r = requests.get(api_request)
-    log.info('Request sent: ' + str(r))
-    
+        # Actually send the request
+        r = requests.get(api_request)
+        log.info('Request sent: ' + str(r))
+    else:
+        log.info('Not sending notification - running in Test Envrionmen t')
+
     log.info('---- End Status Change Notification: ' + site + ' ----')
 
 def write_status():
