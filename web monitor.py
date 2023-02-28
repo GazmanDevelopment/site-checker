@@ -102,8 +102,10 @@ def test_sites():
             site_content = ''
             site_response = ''
 
-            # Try to connect to the site and read the response into a string object            
-            site_response = urllib.request.urlopen(url_to_check)
+            # Try to connect to the site and read the response into a string object.  We process an initial URL Open to obtain any final redirects
+            # Then we use that final URL to obtain the actual page data            
+            redirect_url = urllib.request.urlopen(url_to_check).geturl()
+            site_response = urllib.request.urlopen(redirect_url)            
             site_content = site_response.read().decode(site_response.headers.get_content_charset())
 
             # Check to see if the search string is in the response
